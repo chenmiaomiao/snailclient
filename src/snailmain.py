@@ -154,7 +154,6 @@ class Window(QtGui.QMainWindow):
         
         result_holderid_layout = QtGui.QVBoxLayout()
         result_stockid_layout = QtGui.QVBoxLayout()
-        
         result_holderid_layout.addWidget(result_holderid_lable, stretch = 1, alignment = QtCore.Qt.AlignCenter)
         result_holderid_layout.addWidget(result_holderid, stretch = 30)
         result_stockid_layout.addWidget(result_stockid_lable, stretch = 1, alignment = QtCore.Qt.AlignCenter)
@@ -172,8 +171,7 @@ class Window(QtGui.QMainWindow):
         global_layout.setSpacing(10)
         global_layout.addSpacing(50)
         global_layout.addLayout(search_layout)
-        global_layout.addLayout(result_layout, stretch = 1)
-        # global_layout.addStretch(1)
+        global_layout.addLayout(result_layout)
         
         
         self.main_widget.setLayout(global_layout)                
