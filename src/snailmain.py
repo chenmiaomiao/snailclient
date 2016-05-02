@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from getprice import date_interconvert
 from PyQt4 import QtGui, QtCore
 
-class Window(QtGui.QWidget):
+class Window(QtGui.QMainWindow):
     
     
     def __init__(self):
@@ -16,9 +16,13 @@ class Window(QtGui.QWidget):
         self.cur = self.conn.cursor()
         
         super(Window, self).__init__()
-        # self.setGeometry(50, 50, 1280, 800)
-        # self.setWindowTitle(u'Snail')
-        # self.setWindowIcon(QtGui.QIcon('snail_120.png'))
+        
+        self.main_widget = QtGui.QWidget(self)
+        self.setCentralWidget(self.main_widget)
+        
+        self.setGeometry(50, 50, 1280, 800)
+        self.setWindowTitle(u'Snail')
+        self.setWindowIcon(QtGui.QIcon('snail_120.png'))
         
         #=======================================================================
         # self.window_rect = self.frameSize()
@@ -71,49 +75,47 @@ class Window(QtGui.QWidget):
         # self.global_layout.addWidget(self.widget_search)
         # self.global_layout.addWidget(self.widget_result)
         
-        #=======================================================================
-        # # action of file
-        # self.act_file_exit = QtGui.QAction('&Exit', self)
-        # self.act_file_exit.setShortcut('Ctrl+Q')
-        # self.act_file_exit.setStatusTip('Leave The App')
-        # self.act_file_exit.triggered.connect(self.close_application)
-        # # action of global method
-        # self.act_global_promise = QtGui.QAction('&Promising Holder', self)
-        # self.act_global_promise.triggered.connect(self.promise_holder)
-        # self.act_global_npo = QtGui.QAction('&Non-public Offering', self)
-        # self.act_global_npo.triggered.connect(self.non_public_offering)
-        # # action of help>style
-        # self.act_style_all = QtGui.QActionGroup(self)
-        # self.act_style_plastique= QtGui.QAction('Plastique', self.act_style_all)# , checkable = True)
-        # self.act_style_cleanlooks = QtGui.QAction('Cleanlooks', self.act_style_all)# , checkable = True)
-        # self.act_style_all.triggered.connect(self.style_set)
-        # self.style_actions = (self.act_style_plastique, self.act_style_cleanlooks)
-        # self.act_style_plastique.trigger()
-        # # action of help
-        # self.act_help_about = QtGui.QAction('&About', self)
-        # self.act_help_about.setStatusTip('About The App')
-        # self.act_help_about.triggered.connect(self.about)
-        # 
-        # # self.statusBar()
-        # 
-        # # sub menu of help
-        # self.sub_help_style = QtGui.QMenu('Style', self)
-        # self.sub_help_style.addActions(self.style_actions)
-        # 
-        # # main menu
-        # self.menu_main = self.menuBar()
-        # # file menu
-        # self.menu_file = self.menu_main.addMenu('&File')
-        # self.menu_file.addAction(self.act_file_exit)
-        # # global menu
-        # self.menu_global = self.menu_main.addMenu('&Global')
-        # self.menu_global.addAction(self.act_global_promise)
-        # self.menu_global.addAction(self.act_global_npo)
-        # # help menu
-        # self.menu_help = self.menu_main.addMenu('&Help')
-        # self.menu_help.addMenu(self.sub_help_style)
-        # self.menu_help.addAction(self.act_help_about)
-        #=======================================================================
+        # action of file
+        self.act_file_exit = QtGui.QAction('&Exit', self)
+        self.act_file_exit.setShortcut('Ctrl+Q')
+        self.act_file_exit.setStatusTip('Leave The App')
+        self.act_file_exit.triggered.connect(self.close_application)
+        # action of global method
+        self.act_global_promise = QtGui.QAction('&Promising Holder', self)
+        self.act_global_promise.triggered.connect(self.promise_holder)
+        self.act_global_npo = QtGui.QAction('&Non-public Offering', self)
+        self.act_global_npo.triggered.connect(self.non_public_offering)
+        # action of help>style
+        self.act_style_all = QtGui.QActionGroup(self)
+        self.act_style_plastique= QtGui.QAction('Plastique', self.act_style_all)# , checkable = True)
+        self.act_style_cleanlooks = QtGui.QAction('Cleanlooks', self.act_style_all)# , checkable = True)
+        self.act_style_all.triggered.connect(self.style_set)
+        self.style_actions = (self.act_style_plastique, self.act_style_cleanlooks)
+        self.act_style_plastique.trigger()
+        # action of help
+        self.act_help_about = QtGui.QAction('&About', self)
+        self.act_help_about.setStatusTip('About The App')
+        self.act_help_about.triggered.connect(self.about)
+          
+        # self.statusBar()
+          
+        # sub menu of help
+        self.sub_help_style = QtGui.QMenu('Style', self)
+        self.sub_help_style.addActions(self.style_actions)
+          
+        # main menu
+        self.menu_main = self.menuBar()
+        # file menu
+        self.menu_file = self.menu_main.addMenu('&File')
+        self.menu_file.addAction(self.act_file_exit)
+        # global menu
+        self.menu_global = self.menu_main.addMenu('&Global')
+        self.menu_global.addAction(self.act_global_promise)
+        self.menu_global.addAction(self.act_global_npo)
+        # help menu
+        self.menu_help = self.menu_main.addMenu('&Help')
+        self.menu_help.addMenu(self.sub_help_style)
+        self.menu_help.addAction(self.act_help_about)
 
         self.home()
         
@@ -174,10 +176,13 @@ class Window(QtGui.QWidget):
         # global_layout.addStretch(1)
         
         
-        self.setLayout(global_layout)                
+        self.main_widget.setLayout(global_layout)                
         
-        self.setGeometry(50, 50, 1280, 800)
-        self.setWindowTitle(u'Snail')
+        #=======================================================================
+        # self.setGeometry(50, 50, 1280, 800)
+        # self.setWindowTitle(u'Snail')
+        #=======================================================================
+        self.setWindowOpacity(0.95)
         # self.show()
         
     def search(self):        
