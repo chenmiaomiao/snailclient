@@ -16,51 +16,64 @@ class Window(QtGui.QMainWindow):
         self.cur = self.conn.cursor()
         
         super(Window, self).__init__()
+        
+        self.main_widget = QtGui.QWidget(self)
+        self.setCentralWidget(self.main_widget)
+        
         self.setGeometry(50, 50, 1280, 800)
         self.setWindowTitle(u'Snail')
         self.setWindowIcon(QtGui.QIcon('snail_120.png'))
         
-        self.window_rect = self.frameSize()
-        self.window_width = self.window_rect.width()
-        self.window_height = self.window_rect.height()     
-           
-        # position and size of search_widget
-        self.widget_search_rect = QtCore.QRect(0, 0, self.window_width, 100)
-        # position and size of result_widget
-        self.widget_result_rect = QtCore.QRect(0, 100, self.window_width, 500)
-        # size of search widgets
-        self.search_combo_size = QtCore.QSize(120, 30)
-        self.search_input_size = QtCore.QSize(200, 30)
-        self.search_button_size = QtCore.QSize(100, 30)
-        # position of search widgets
-        self.search_combo_move = QtCore.QPoint((self.widget_search_rect.width()-(self.search_combo_size.width()+self.search_input_size.width()+self.search_button_size.width()))/2, 
-                                          50
-                                          )
-        self.search_input_move = QtCore.QPoint((self.widget_search_rect.width()+self.search_combo_size.width()-self.search_input_size.width()-self.search_button_size.width())/2, 
-                                          50
-                                          )
-        self.search_button_move = QtCore.QPoint((self.widget_search_rect.width()+self.search_combo_size.width()+self.search_input_size.width()-self.search_button_size.width())/2, 
-                                           50
-                                           )
-        # result editor position
-        self.result_browser_size = QtCore.QSize(self.widget_result_rect.width(), 
-                                        self.widget_result_rect.height()*0.8
-                                        )
-        self.result_browser_move = QtCore.QPoint(0, 0)       
+        #=======================================================================
+        # self.window_rect = self.frameSize()
+        # self.window_width = self.window_rect.width()
+        # self.window_height = self.window_rect.height()     
+        #    
+        # # position and size of search_widget
+        # self.widget_search_rect = QtCore.QRect(0, 0, self.window_width, 100)
+        # # position and size of result_widget
+        # self.widget_result_rect = QtCore.QRect(0, 100, self.window_width, 500)
+        # # size of search widgets
+        # self.search_combo_size = QtCore.QSize(120, 30)
+        # self.search_input_size = QtCore.QSize(200, 30)
+        # self.search_button_size = QtCore.QSize(100, 30)
+        # # position of search widgets
+        # self.search_combo_move = QtCore.QPoint((self.widget_search_rect.width()-(self.search_combo_size.width()+self.search_input_size.width()+self.search_button_size.width()))/2, 
+        #                                   50
+        #                                   )
+        # self.search_input_move = QtCore.QPoint((self.widget_search_rect.width()+self.search_combo_size.width()-self.search_input_size.width()-self.search_button_size.width())/2, 
+        #                                   50
+        #                                   )
+        # self.search_button_move = QtCore.QPoint((self.widget_search_rect.width()+self.search_combo_size.width()+self.search_input_size.width()-self.search_button_size.width())/2, 
+        #                                    50
+        #                                    )
+        # # result editor position
+        # self.result_browser_size = QtCore.QSize(self.widget_result_rect.width(), 
+        #                                 self.widget_result_rect.height()*0.8
+        #                                 )
+        # self.result_browser_move = QtCore.QPoint(0, 0)       
+        #=======================================================================
         
-        self.main_widgets = []
+        # self.main_widgets = []
+        
         
         # search widget
-        self.widget_search = QtGui.QWidget(self)
-        self.widget_search.setGeometry(self.widget_search_rect)
+        # self.widget_search = QtGui.QWidget(self)
+        # self.widget_search.resize(500, 100)
+        # self.widget_search.setGeometry(self.widget_search_rect)
         # mother board of reslut
-        self.widget_result = QtGui.QWidget(self)
-        self.widget_result.setGeometry(self.widget_result_rect)
+        # self.widget_result = QtGui.QWidget(self)
+        # self.widget_result.resize(500, 500)
+        # self.widget_result.setGeometry(self.widget_result_rect)
         # global method widget
-        self.widget_result_g_promisholder = QtGui.QWidget(self.widget_result)
-        self.main_widgets = self.object_appending(self.widget_result_g_promisholder, self.main_widgets)
-        self.widget_result_g_npo = QtGui.QWidget(self.widget_result)
-        self.main_widgets = self.object_appending(self.widget_result_g_npo, self.main_widgets)
+        # self.widget_result_g_promisholder = QtGui.QWidget(self.widget_result)
+        # self.main_widgets = self.object_appending(self.widget_result_g_promisholder, self.main_widgets)
+        # self.widget_result_g_npo = QtGui.QWidget(self.widget_result)
+        # self.main_widgets = self.object_appending(self.widget_result_g_npo, self.main_widgets)
+        
+        # put widget in layout
+        # self.global_layout.addWidget(self.widget_search)
+        # self.global_layout.addWidget(self.widget_result)
         
         # action of file
         self.act_file_exit = QtGui.QAction('&Exit', self)
@@ -83,13 +96,13 @@ class Window(QtGui.QMainWindow):
         self.act_help_about = QtGui.QAction('&About', self)
         self.act_help_about.setStatusTip('About The App')
         self.act_help_about.triggered.connect(self.about)
-        
-        self.statusBar()
-        
+          
+        # self.statusBar()
+          
         # sub menu of help
         self.sub_help_style = QtGui.QMenu('Style', self)
         self.sub_help_style.addActions(self.style_actions)
-        
+          
         # main menu
         self.menu_main = self.menuBar()
         # file menu
@@ -108,68 +121,116 @@ class Window(QtGui.QMainWindow):
         
     def home(self):
         # method
-        self.search_combo = QtGui.QComboBox(self)
-        self.search_combo.resize(self.search_combo_size)
-        self.search_combo.move(self.search_combo_move)
-        self.search_combo.addItem('Profile')
-        self.search_combo.addItem('Number of Holders')
+        search_combo = QtGui.QComboBox()
+        # search_combo.resize(self.search_combo_size)
+        # self.search_combo.move(self.search_combo_move)
+        search_combo.addItem('Profile')
+        search_combo.addItem('Number of Holders')
         
         # search input
-        self.search_input = QtGui.QLineEdit(self.widget_search)
-        self.search_input.resize(self.search_input_size)
-        self.search_input.move(self.search_input_move)
-        self.search_input.returnPressed.connect(self.search)
+        search_input = QtGui.QLineEdit()
+        # search_input.resize(self.search_input_size)
+        # self.search_input.move(self.search_input_move)
+        search_input.returnPressed.connect(self.search)
         
         # search button
-        self.search_button = QtGui.QPushButton('Search', self.widget_search)
-        self.search_button.clicked.connect(self.search)
-        self.search_button.resize(self.search_button_size)
-        self.search_button.move(self.search_button_move)
+        search_button = QtGui.QPushButton('Search')
+        search_button.clicked.connect(self.search)
+        # search_button.resize(self.search_button_size)
+        # self.search_button.move(self.search_button_move)
         
+        # search area layout
+        search_layout = QtGui.QHBoxLayout()
+        # search_layout.setSpacing(0)
+        search_layout.addWidget(search_combo, stretch = 10, alignment = QtCore.Qt.AlignRight)
+        search_layout.addWidget(search_input, stretch = 5)
+        search_layout.addWidget(search_button, stretch = 10, alignment = QtCore.Qt.AlignLeft)
+
+        result_holderid_lable = QtGui.QLabel('<b>HOLDER</b>')
+        result_stockid_lable =  QtGui.QLabel('<b>STOCK</b>')
+        result_holderid = QtGui.QListWidget()
+        result_stockid = QtGui.QListView()
+        result_main = QtGui.QWidget()
+        
+        result_holderid_layout = QtGui.QVBoxLayout()
+        result_stockid_layout = QtGui.QVBoxLayout()
+        result_holderid_layout.addWidget(result_holderid_lable, stretch = 1, alignment = QtCore.Qt.AlignCenter)
+        result_holderid_layout.addWidget(result_holderid, stretch = 30)
+        result_stockid_layout.addWidget(result_stockid_lable, stretch = 1, alignment = QtCore.Qt.AlignCenter)
+        result_stockid_layout.addWidget(result_stockid, stretch = 30)
+        
+        result_layout = QtGui.QHBoxLayout()
+        # result_layout.addWidget(result_holderid, stretch = 1)
+        # result_layout.addWidget(result_stockid, stretch = 1)
+        result_layout.addLayout(result_holderid_layout, stretch = 1)
+        result_layout.addLayout(result_stockid_layout, stretch = 1)
+        result_layout.addWidget(result_main, stretch = 20)
+        
+        # global layout
+        global_layout = QtGui.QVBoxLayout()
+        global_layout.setSpacing(10)
+        global_layout.addSpacing(50)
+        global_layout.addLayout(search_layout)
+        global_layout.addLayout(result_layout)
+        
+        
+        self.main_widget.setLayout(global_layout)                
+        
+        #=======================================================================
+        # self.setGeometry(50, 50, 1280, 800)
+        # self.setWindowTitle(u'Snail')
+        #=======================================================================
+        self.setWindowOpacity(0.95)
         # self.show()
         
     def search(self):        
-        search_code = self.search_input.text()
-
+        # search_code = self.search_input.text()
+ 
         # result widget
-        self.widget_result_common = QtGui.QWidget(self.widget_result)
-        self.widget_result_common.resize(self.widget_result.width(), self.widget_result.height())
+        # self.widget_result_common = QtGui.QWidget(self.widget_result)
+        # self.widget_result_common.resize(self.widget_result.width(), self.widget_result.height())
         # self.widget_result_layout = QtGui.QHBoxLayout(self.widget_result)
         # self.widget_result_layout.addWidget(self.widget_result_common)
-        self.main_widgets = self.object_appending(self.widget_result_common, self.main_widgets)
-        self.widget_result_common_layout = QtGui.QHBoxLayout(self.widget_result_common)
-
-        self.cur.execute("SELECT DISTINCT reportdate, holdersnumber FROM Majorholderinfo WHERE stockid = ? AND reportdate <> '-1' AND holdersnumber <> '-1'", ('%s' % search_code, ))
-        search_stocks = self.cur.fetchall()
-        
-        self.result_browse()
-        
-        dates = []
-        holders = []
-        for search_stock in search_stocks:
-            dates.append(date_interconvert(search_stock[0]))
-            holders.append(search_stock[1])
-            print str(search_stock).decode('unicode-escape')
-            search_stock_str = str(search_stock).decode('unicode-escape')
-            self.result_browser.append(search_stock_str)
-            self.result_browser.show()
-            
-            QtGui.QApplication.processEvents()
-        
-        print dates, holders
-        
-        plt.plot(dates, holders)
-        plt.show()
+        # self.main_widgets = self.object_appending(self.widget_result_common, self.main_widgets)
+        # self.widget_result_common_layout = QtGui.QHBoxLayout(self.widget_result_common)
+ 
+        #=======================================================================
+        # self.cur.execute("SELECT DISTINCT reportdate, holdersnumber FROM Majorholderinfo WHERE stockid = ? AND reportdate <> '-1' AND holdersnumber <> '-1'", ('%s' % search_code, ))
+        # search_stocks = self.cur.fetchall()
+        #  
+        # self.result_browse()
+        #  
+        # dates = []
+        # holders = []
+        # for search_stock in search_stocks:
+        #     dates.append(date_interconvert(search_stock[0]))
+        #     holders.append(search_stock[1])
+        #     print str(search_stock).decode('unicode-escape')
+        #     search_stock_str = str(search_stock).decode('unicode-escape')
+        #     self.result_browser.append(search_stock_str)
+        #     self.result_browser.show()
+        #      
+        #     QtGui.QApplication.processEvents()
+        #  
+        # print dates, holders
+        #  
+        # plt.plot(dates, holders)
+        # plt.show()
+        #=======================================================================
+        pass
 
     def result_browse(self):
-        self.result_browser = QtGui.QTextBrowser(self.widget_result_common)
-        # self.result_browser.setGeometry(0, 0, 800, 500)
-        # self.widget_result_common.setCentralWidget(self.result_browser)
-        self.result_browser.resize(self.result_browser_size)
-        self.result_browser.move(self.result_browser_move)
-        self.widget_result_common_layout.addWidget(self.result_browser)
-        self.toggle_widget(self.widget_result_common, self.main_widgets)
-        # self.result_browser.show()
+        #=======================================================================
+        # self.result_browser = QtGui.QTextBrowser(self.widget_result_common)
+        # # self.result_browser.setGeometry(0, 0, 800, 500)
+        # # self.widget_result_common.setCentralWidget(self.result_browser)
+        # self.result_browser.resize(self.result_browser_size)
+        # self.result_browser.move(self.result_browser_move)
+        # # self.widget_result_common_layout.addWidget(self.result_browser)
+        # # self.toggle_widget(self.widget_result_common, self.main_widgets)
+        # # self.result_browser.show()
+        #=======================================================================
+        pass
     
     def promise_holder(self):
         print "I'm promising holder"
