@@ -5,8 +5,9 @@ import time
 import datetime
 import sqlite3
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from getprice import date_interconvert
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui, QtCore, Qt
 
 class Window(QtGui.QMainWindow):
     
@@ -17,12 +18,16 @@ class Window(QtGui.QMainWindow):
         
         super(Window, self).__init__()
         
+        self.result_thread = Worker()
+        
+        
         self.main_widget = QtGui.QWidget(self)
         self.setCentralWidget(self.main_widget)
         
         self.setGeometry(50, 50, 1280, 800)
         self.setWindowTitle(u'Snail')
         self.setWindowIcon(QtGui.QIcon('snail_120.png'))
+        self.setWindowOpacity(0.95)
         
         #=======================================================================
         # self.window_rect = self.frameSize()
@@ -53,27 +58,6 @@ class Window(QtGui.QMainWindow):
         #                                 )
         # self.result_browser_move = QtCore.QPoint(0, 0)       
         #=======================================================================
-        
-        # self.main_widgets = []
-        
-        
-        # search widget
-        # self.widget_search = QtGui.QWidget(self)
-        # self.widget_search.resize(500, 100)
-        # self.widget_search.setGeometry(self.widget_search_rect)
-        # mother board of reslut
-        # self.widget_result = QtGui.QWidget(self)
-        # self.widget_result.resize(500, 500)
-        # self.widget_result.setGeometry(self.widget_result_rect)
-        # global method widget
-        # self.widget_result_g_promisholder = QtGui.QWidget(self.widget_result)
-        # self.main_widgets = self.object_appending(self.widget_result_g_promisholder, self.main_widgets)
-        # self.widget_result_g_npo = QtGui.QWidget(self.widget_result)
-        # self.main_widgets = self.object_appending(self.widget_result_g_npo, self.main_widgets)
-        
-        # put widget in layout
-        # self.global_layout.addWidget(self.widget_search)
-        # self.global_layout.addWidget(self.widget_result)
         
         # action of file
         self.act_file_exit = QtGui.QAction('&Exit', self)
@@ -122,35 +106,29 @@ class Window(QtGui.QMainWindow):
     def home(self):
         # method
         search_combo = QtGui.QComboBox()
-        # search_combo.resize(self.search_combo_size)
-        # self.search_combo.move(self.search_combo_move)
         search_combo.addItem('Profile')
         search_combo.addItem('Number of Holders')
         
         # search input
         search_input = QtGui.QLineEdit()
-        # search_input.resize(self.search_input_size)
-        # self.search_input.move(self.search_input_move)
-        search_input.returnPressed.connect(self.search)
+        search_input.returnPressed.connect(lambda: self.search(search_input.text()))
         
         # search button
         search_button = QtGui.QPushButton('Search')
-        search_button.clicked.connect(self.search)
-        # search_button.resize(self.search_button_size)
-        # self.search_button.move(self.search_button_move)
+        search_button.clicked.connect(lambda: self.search(search_input.text()))
         
         # search area layout
         search_layout = QtGui.QHBoxLayout()
-        # search_layout.setSpacing(0)
         search_layout.addWidget(search_combo, stretch = 10, alignment = QtCore.Qt.AlignRight)
         search_layout.addWidget(search_input, stretch = 5)
         search_layout.addWidget(search_button, stretch = 10, alignment = QtCore.Qt.AlignLeft)
-
+        
+        # result area layout
         result_holderid_lable = QtGui.QLabel('<b>HOLDER</b>')
         result_stockid_lable =  QtGui.QLabel('<b>STOCK</b>')
         result_holderid = QtGui.QListWidget()
         result_stockid = QtGui.QListView()
-        result_main = QtGui.QWidget()
+        self.result_main = QtGui.QWidget()
         
         result_holderid_layout = QtGui.QVBoxLayout()
         result_stockid_layout = QtGui.QVBoxLayout()
@@ -160,11 +138,9 @@ class Window(QtGui.QMainWindow):
         result_stockid_layout.addWidget(result_stockid, stretch = 30)
         
         result_layout = QtGui.QHBoxLayout()
-        # result_layout.addWidget(result_holderid, stretch = 1)
-        # result_layout.addWidget(result_stockid, stretch = 1)
         result_layout.addLayout(result_holderid_layout, stretch = 1)
         result_layout.addLayout(result_stockid_layout, stretch = 1)
-        result_layout.addWidget(result_main, stretch = 20)
+        result_layout.addWidget(self.result_main, stretch = 20)
         
         # global layout
         global_layout = QtGui.QVBoxLayout()
@@ -176,62 +152,56 @@ class Window(QtGui.QMainWindow):
         
         self.main_widget.setLayout(global_layout)                
         
-        #=======================================================================
-        # self.setGeometry(50, 50, 1280, 800)
-        # self.setWindowTitle(u'Snail')
-        #=======================================================================
-        self.setWindowOpacity(0.95)
         # self.show()
         
-    def search(self):        
-        # search_code = self.search_input.text()
- 
-        # result widget
-        # self.widget_result_common = QtGui.QWidget(self.widget_result)
-        # self.widget_result_common.resize(self.widget_result.width(), self.widget_result.height())
-        # self.widget_result_layout = QtGui.QHBoxLayout(self.widget_result)
-        # self.widget_result_layout.addWidget(self.widget_result_common)
-        # self.main_widgets = self.object_appending(self.widget_result_common, self.main_widgets)
-        # self.widget_result_common_layout = QtGui.QHBoxLayout(self.widget_result_common)
- 
+    def search(self, search_text):
         #=======================================================================
-        # self.cur.execute("SELECT DISTINCT reportdate, holdersnumber FROM Majorholderinfo WHERE stockid = ? AND reportdate <> '-1' AND holdersnumber <> '-1'", ('%s' % search_code, ))
-        # search_stocks = self.cur.fetchall()
-        #  
-        # self.result_browse()
-        #  
-        # dates = []
-        # holders = []
-        # for search_stock in search_stocks:
-        #     dates.append(date_interconvert(search_stock[0]))
-        #     holders.append(search_stock[1])
-        #     print str(search_stock).decode('unicode-escape')
-        #     search_stock_str = str(search_stock).decode('unicode-escape')
-        #     self.result_browser.append(search_stock_str)
-        #     self.result_browser.show()
-        #      
-        #     QtGui.QApplication.processEvents()
-        #  
+        # # prepare the browser
+        # self.result_browser = QtGui.QTextBrowser(self.result_main)
+        # self.result_browser.show()
+        #=======================================================================
+        # prepare the canvas    
+        self.figure = plt.figure()
+        self.canvas = FigureCanvas(self.figure)
+        
+        # set the layout of result_main
+        result_main_layout = QtGui.QVBoxLayout()
+        result_main_layout.addWidget(self.canvas)
+        self.result_main.setLayout(result_main_layout)
+        
+        # connect the loop signal to update_browser or plot
+        # self.result_thread.result_item_emitted[str].connect(self.update_browser)
+        self.result_thread.result_item_emitted[list, list].connect(self.plot_preprocessing)
+        
+        # query database
+        self.cur.execute("SELECT DISTINCT reportdate, holdersnumber FROM Majorholderinfo WHERE stockid = ? AND reportdate <> '-1' AND holdersnumber <> '-1'", ('%s' % search_text, ))
+        results = self.cur.fetchall()
+
+        #update the browser
+        self.result_thread.show(results)
+        
         # print dates, holders
-        #  
+          
         # plt.plot(dates, holders)
         # plt.show()
-        #=======================================================================
-        pass
-
-    def result_browse(self):
-        #=======================================================================
-        # self.result_browser = QtGui.QTextBrowser(self.widget_result_common)
-        # # self.result_browser.setGeometry(0, 0, 800, 500)
-        # # self.widget_result_common.setCentralWidget(self.result_browser)
-        # self.result_browser.resize(self.result_browser_size)
-        # self.result_browser.move(self.result_browser_move)
-        # # self.widget_result_common_layout.addWidget(self.result_browser)
-        # # self.toggle_widget(self.widget_result_common, self.main_widgets)
-        # # self.result_browser.show()
-        #=======================================================================
-        pass
-    
+        
+    #===========================================================================
+    # def update_browser(self, item, *args):
+    #     
+    #     self.result_browser.append(item)
+    #     
+    #     print item, 'aha', args
+    #===========================================================================
+        
+    def plot_preprocessing(self, data):
+        self.plot(data, self.figure, self.canvas)
+        
+    def plot(self, data, figure, canvas):
+        plots = figure.add_subplot(111)
+        plots.hold(False)
+        plots.plot(data)
+        canvas.draw()
+        
     def promise_holder(self):
         print "I'm promising holder"
         
@@ -242,22 +212,24 @@ class Window(QtGui.QMainWindow):
         
         for holder in promising_holders:
             print str(holder).decode('unicode-escape')
-        
+    
         
     def non_public_offering(self):
         print "I'm private placement"
     
-    def object_appending(self, object_single, objects):
-        if object_single not in objects:
-            objects.append(object_single)
-        return objects
-
-    def toggle_widget(self, show_widget, widgets):
-        for widget in widgets:
-            if widget == show_widget:
-                widget.show()
-            else:
-                widget.hide()
+#===============================================================================
+#     def object_appending(self, object_single, objects):
+#         if object_single not in objects:
+#             objects.append(object_single)
+#         return objects
+# 
+#     def toggle_widget(self, show_widget, widgets):
+#         for widget in widgets:
+#             if widget == show_widget:
+#                 widget.show()
+#             else:
+#                 widget.hide()
+#===============================================================================
                 
     def style_set(self, action_triggered):
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(action_triggered.text()))
@@ -268,9 +240,35 @@ class Window(QtGui.QMainWindow):
     def close_application(self):
         self.cur.close()
         self.conn.close
-        sys.exit() 
+        sys.exit()
+        
 
-
+class Worker(QtCore.QThread):
+    result_item_emitted = QtCore.pyqtSignal([str], [list, list])
+    
+    def __init__(self, parent = None):
+        super(Worker, self).__init__(parent = None)
+    
+    #===========================================================================
+    # def __del__(self):
+    #     self.wait()
+    #===========================================================================
+        
+    def show(self, results):
+        self.results = results
+        self.start()
+    
+    def run(self):
+        dates = []
+        holders = []
+        for item in self.results:
+            dates.append(date_interconvert(item[0]))
+            holders.append(item[1])
+            item_str = str(item).decode('unicode-escape')
+            self.result_item_emitted[str].emit(item_str)
+            # time.sleep(0.1)
+        self.result_item_emitted[list, list].emit(holders, dates)
+    
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     GUI = Window()
