@@ -149,9 +149,16 @@ class Window(QtGui.QMainWindow):
         global_layout.addLayout(search_layout)
         global_layout.addLayout(result_layout)
         
+        self.main_widget.setLayout(global_layout)
         
-        self.main_widget.setLayout(global_layout)                
+        # prepare the canvas    
+        self.figure = plt.figure()
+        self.canvas = FigureCanvas(self.figure)
         
+        # set the layout of result_main
+        result_main_layout = QtGui.QVBoxLayout()
+        result_main_layout.addWidget(self.canvas)
+        self.result_main.setLayout(result_main_layout)        
         # self.show()
         
     def search(self, search_text):
@@ -160,14 +167,6 @@ class Window(QtGui.QMainWindow):
         # self.result_browser = QtGui.QTextBrowser(self.result_main)
         # self.result_browser.show()
         #=======================================================================
-        # prepare the canvas    
-        self.figure = plt.figure()
-        self.canvas = FigureCanvas(self.figure)
-        
-        # set the layout of result_main
-        result_main_layout = QtGui.QVBoxLayout()
-        result_main_layout.addWidget(self.canvas)
-        self.result_main.setLayout(result_main_layout)
         
         # connect the loop signal to update_browser or plot
         # self.result_thread.result_item_emitted[str].connect(self.update_browser)
