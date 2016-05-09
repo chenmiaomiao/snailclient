@@ -126,7 +126,7 @@ class Window(QtGui.QMainWindow):
         # result area layout
         result_holderid_lable = QtGui.QLabel('<b>HOLDER</b>')
         result_stockid_lable =  QtGui.QLabel('<b>STOCK</b>')
-        result_holderid = QtGui.QListWidget()
+        result_holderid = QtGui.QListView()
         result_stockid = QtGui.QListView()
         self.result_main = QtGui.QWidget()
         
